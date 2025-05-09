@@ -25,12 +25,13 @@ while (len(correct_guesses)/number_of_states) != 1:
     user_answer = (screen.textinput(title=f"{len(correct_guesses)}/{number_of_states} States Correct", prompt="Name a state in the USA")).title().strip()
 
     if user_answer == "Exit":
-        states_to_learn = []
-        for state in all_states:
-            if state not in correct_guesses:
-                states_to_learn.append(state)
+
+        states_to_learn = [state for state in all_states if state not in correct_guesses]
+
         states_to_learn_df = pandas.DataFrame({"States to learn": states_to_learn})
         states_to_learn_df.to_csv("states_to_learn.csv")
+        break
+
 
     if user_answer in all_states and user_answer not in correct_guesses:
         t = Turtle()
