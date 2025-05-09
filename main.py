@@ -14,27 +14,30 @@ turtle.shape(image)
 game_over = False
 
 states_data = pandas.read_csv("50_states.csv")
+all_states = states_data.state.to_list()
 
-pen = Turtle()
-pen.penup()
-pen.hideturtle()
+correct_guesses = []
+number_of_states = len(all_states)
 
-while game_over == False:
-
-    user_answer = (screen.textinput(title="Guess the State", prompt="Name a state in the USA")).title().strip()
+while (len(correct_guesses)/number_of_states) != 1:
 
 
-    if user_answer in states_data.state.values:
+    user_answer = (screen.textinput(title=f"{len(correct_guesses)}/{number_of_states} States Correct", prompt="Name a state in the USA")).title().strip()
 
+    if user_answer == "Exit":
+        states_to_learn = []
+        for state in all_states:
+            if state not in correct_guesses:
+                states_to_learn.append(state)
+        states_to_learn_df = pandas.DataFrame({"States to learn": states_to_learn})
+        states_to_learn_df.to_csv("states_to_learn.csv")
+
+    if user_answer in all_states and user_answer not in correct_guesses:
+        t = Turtle()
+        t.penup()
+        t.hideturtle()
         row = states_data[states_data.state == user_answer]
-        x_cor = row.x.iloc[0]
-        y_cor = row.y.iloc[0]
-        pen.goto(x_cor, y_cor)
+        t.goto(row.x.item(), row.y.item())
+        t.write(user_answer)
+        correct_guesses.append(user_answer)
 
-        pen.write(user_answer, align=ALIGNMENT, font=FONT)
-
-
-
-
-
-turtle.mainloop()
